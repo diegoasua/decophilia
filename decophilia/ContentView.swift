@@ -7,17 +7,40 @@
 
 import SwiftUI
 
-struct Skyscraper: Identifiable {
+
+struct Skyscraper: Identifiable, Hashable, Codable {
     var id: Int
     var name: String
     var location: String
     var imageName: String
 }
 
+extension UserDefaults {
+    func setSkyscrapers(_ skyscrapers: [Skyscraper], forKey key: String) {
+        if let encoded = try? JSONEncoder().encode(skyscrapers) {
+            set(encoded, forKey: key)
+        }
+    }
+    
+    func skyscrapers(forKey key: String) -> [Skyscraper]? {
+        if let data = data(forKey: key),
+           let decoded = try? JSONDecoder().decode([Skyscraper].self, from: data) {
+            return decoded
+        }
+        return nil
+    }
+}
+
+
 let sampleSkyscrapers: [Skyscraper] = [
     Skyscraper(id: 0, name: "Empire State Building", location: "NYC", imageName: "empireState"),
     Skyscraper(id: 1, name: "Shanghai Tower", location: "Shanghai", imageName: "shanghaiTower"),
-    // Add more skyscrapers as needed...
+    Skyscraper(id: 2, name: "450 Sutter Street", location: "SF", imageName: "450ShutterStreet"),
+    Skyscraper(id: 3, name: "One Wall Street", location: "NYC", imageName: "OneWallStreet"),
+    Skyscraper(id: 4, name: "Chrysler Building", location: "NYC", imageName: "chryslerBuilding"),
+    Skyscraper(id: 5, name: "Woolworth Building", location: "NYC", imageName: "woolworthBuilding"),
+    Skyscraper(id: 6, name: "The Harrison", location: "SF", imageName: "theHarrison"),
+    Skyscraper(id: 6, name: "Infinity Towers", location: "SF", imageName: "infinityTowers")
 ]
 
 struct SwipingView: View {
@@ -62,7 +85,10 @@ struct SwipingView: View {
     }
     
     func like() {
-        likedSkyscrapers.append(sampleSkyscrapers[currentIndex])
+        if !likedSkyscrapers.contains(sampleSkyscrapers[currentIndex]) {
+            likedSkyscrapers.append(sampleSkyscrapers[currentIndex])
+            UserDefaults.standard.setSkyscrapers(likedSkyscrapers, forKey: "LikedSkyscrapers")
+        }
         moveToNextSkyscraper()
     }
     
@@ -78,48 +104,93 @@ struct SwipingView: View {
 }
 
 struct MatchesView: View {
-    var likedSkyscrapers: [Skyscraper]
+    @Binding var likedSkyscrapers: [Skyscraper] // Change to @Binding
+    @State private var selectedSkyscraper: Skyscraper?
     
     var body: some View {
-        List(likedSkyscrapers) { skyscraper in
-            VStack(alignment: .leading) {
-                Image(skyscraper.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 150)
-                Text(skyscraper.name).font(.headline)
-                Text(skyscraper.location).font(.subheadline)
+        NavigationView {
+            ZStack {
+                // Setting the light brown color for the whole background
+                Color(red: 0.92, green: 0.87, blue: 0.80)
+                    .edgesIgnoringSafeArea(.all) // This ensures it covers the full screen
+                
+                List {
+                    ForEach(likedSkyscrapers, id: \.self) { skyscraper in
+                        VStack(alignment: .leading) {
+                            Image(skyscraper.imageName)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 150)
+                            Text(skyscraper.name).font(.headline)
+                            Text(skyscraper.location).font(.subheadline)
+                        }
+                        .background(
+                            NavigationLink(
+                                destination: ARImageView(imageName: skyscraper.imageName),
+                                tag: skyscraper,
+                                selection: $selectedSkyscraper,
+                                label: { EmptyView() }
+                            )
+                        )
+                        .onTapGesture {
+                            self.selectedSkyscraper = skyscraper
+                        }
+                    }
+                    .onDelete(perform: delete) // Add this for swipe-to-delete functionality
+                }
+                .listStyle(PlainListStyle()) // Removes default list style and separators
+                .navigationBarItems(trailing: EditButton()) // Add this for an Edit button to toggle delete mode
             }
         }
     }
+    
+    // Add this function to handle deletion
+    func delete(at offsets: IndexSet) {
+        likedSkyscrapers.remove(atOffsets: offsets)
+        UserDefaults.standard.setSkyscrapers(likedSkyscrapers, forKey: "LikedSkyscrapers")
+    }
 }
+
+
 
 struct ContentView: View {
     @State private var showMatches = false
-    @State private var likedSkyscrapers: [Skyscraper] = []
+    @State private var likedSkyscrapers: [Skyscraper] = UserDefaults.standard.skyscrapers(forKey: "LikedSkyscrapers") ?? []
     
     var body: some View {
-        VStack {
-            if showMatches {
-                MatchesView(likedSkyscrapers: likedSkyscrapers)
-            } else {
-                SwipingView(likedSkyscrapers: $likedSkyscrapers)
-            }
+        ZStack {
+            // Setting the light brown color for the whole background
+            Color(red: 0.92, green: 0.87, blue: 0.80) // You can adjust these values to get the shade you desire
+                .edgesIgnoringSafeArea(.all) // This ensures it covers behind the notch etc.
             
-            Button(action: {
-                showMatches.toggle()
-            }) {
-                Text(showMatches ? "Back to Swiping" : "Show Matches")
-                    .padding()
-                    .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
-                    .shadow(color: .gray, radius: 8, x: 0, y: 5)
-            }.padding(.top, 20)
+            VStack {
+                if showMatches {
+                    MatchesView(likedSkyscrapers: $likedSkyscrapers)
+                } else {
+                    SwipingView(likedSkyscrapers: $likedSkyscrapers)
+                }
+                
+                Button(action: {
+                    showMatches.toggle()
+                }) {
+                    Text(showMatches ? "Back to Swiping" : "Show Matches")
+                        .font(.headline) // A placeholder font, consider using a custom hand-drawn font
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 10)
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(Color.gray)
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray, lineWidth: 2)
+                                .shadow(color: .black.opacity(0.1), radius: 1, x: 1, y: 1)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        )
+                }.padding(.top, 20)
+            }
         }
     }
 }
-
 
 
 #Preview {

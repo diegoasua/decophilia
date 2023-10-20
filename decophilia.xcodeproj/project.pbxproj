@@ -14,6 +14,7 @@
 		D5309CB82ADE398200B5D0E3 /* decophiliaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5309CB72ADE398200B5D0E3 /* decophiliaTests.swift */; };
 		D5309CC22ADE398200B5D0E3 /* decophiliaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5309CC12ADE398200B5D0E3 /* decophiliaUITests.swift */; };
 		D5309CC42ADE398200B5D0E3 /* decophiliaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5309CC32ADE398200B5D0E3 /* decophiliaUITestsLaunchTests.swift */; };
+		D5309CD12ADE496B00B5D0E3 /* arScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5309CD02ADE496B00B5D0E3 /* arScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,8 @@
 		D5309CBD2ADE398200B5D0E3 /* decophiliaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = decophiliaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5309CC12ADE398200B5D0E3 /* decophiliaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = decophiliaUITests.swift; sourceTree = "<group>"; };
 		D5309CC32ADE398200B5D0E3 /* decophiliaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = decophiliaUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D5309CD02ADE496B00B5D0E3 /* arScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = arScene.swift; sourceTree = "<group>"; };
+		D5309CD22ADE4D5900B5D0E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,10 +97,12 @@
 		D5309CA52ADE398100B5D0E3 /* decophilia */ = {
 			isa = PBXGroup;
 			children = (
+				D5309CD22ADE4D5900B5D0E3 /* Info.plist */,
 				D5309CA62ADE398100B5D0E3 /* decophiliaApp.swift */,
 				D5309CA82ADE398100B5D0E3 /* ContentView.swift */,
 				D5309CAA2ADE398200B5D0E3 /* Assets.xcassets */,
 				D5309CAC2ADE398200B5D0E3 /* Preview Content */,
+				D5309CD02ADE496B00B5D0E3 /* arScene.swift */,
 			);
 			path = decophilia;
 			sourceTree = "<group>";
@@ -258,6 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5309CA92ADE398100B5D0E3 /* ContentView.swift in Sources */,
+				D5309CD12ADE496B00B5D0E3 /* arScene.swift in Sources */,
 				D5309CA72ADE398100B5D0E3 /* decophiliaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,6 +431,7 @@
 				DEVELOPMENT_TEAM = YR95F4NP7Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = decophilia/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -454,6 +461,7 @@
 				DEVELOPMENT_TEAM = YR95F4NP7Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = decophilia/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
