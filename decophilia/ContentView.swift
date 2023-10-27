@@ -40,7 +40,7 @@ let sampleSkyscrapers: [Skyscraper] = [
     Skyscraper(id: 4, name: "Chrysler Building", location: "NYC", imageName: "chryslerBuilding"),
     Skyscraper(id: 5, name: "Woolworth Building", location: "NYC", imageName: "woolworthBuilding"),
     Skyscraper(id: 6, name: "The Harrison", location: "SF", imageName: "theHarrison"),
-    Skyscraper(id: 6, name: "Infinity Towers", location: "SF", imageName: "infinityTowers")
+    Skyscraper(id: 7, name: "Infinity Towers", location: "SF", imageName: "infinityTowers")
 ]
 
 struct SwipingView: View {
